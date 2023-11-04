@@ -11,7 +11,7 @@ function App() {
       >
         Minesweeper
       </h1>
-      <Minefield numMines={3} numRows={5} numCols={5}/>
+      <Minefield numMines={10} numRows={10} numCols={10}/>
     </div>
   )
 }
