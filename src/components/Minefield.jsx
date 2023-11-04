@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Tile from './Tile'
 import { DIRECTIONS } from '../constants/directions'
 
-const Minefield = ({numMines, numRows, numCols=numRows}) => {
+const Minefield = ({numMines, numRows, numCols=numRows, setWin, setLose, gameState}) => {
 
     const [ mineField, setMinefield ] = useState([])
 
@@ -46,11 +46,31 @@ const Minefield = ({numMines, numRows, numCols=numRows}) => {
     }
 
     useEffect(()=>{
-        setMinefield(createField(numMines, numRows, numCols))
-    },[])
+        if(gameState===0){
+            setMinefield(createField(numMines, numRows, numCols))
+        }
+    },[gameState])
+
+    useEffect( () => {
+        let isWin = true
+        if(mineField.length===0) return
+        for(let i=0; i<numRows; i++){
+            for(let j=0; j<numCols; j++){
+                if(mineField[i][j].isCovered && !mineField[i][j].hasMine){
+                    isWin = false
+                    break
+                }
+            }
+        }
+        if(isWin) setWin()
+    },[mineField])
 
     const uncoverTile = (field, i, j) => {
         field[i][j].isCovered = false
+        if(field[i][j].hasMine){
+            setLose()
+            return
+        }
         if(field[i][j].value === 0){
             DIRECTIONS.forEach( d => {
                 const newX = d.x + i
@@ -62,6 +82,7 @@ const Minefield = ({numMines, numRows, numCols=numRows}) => {
 
     const handleClick = (e,i,j) => {
         e.preventDefault()
+        if(gameState!==0) return
         let newField = [...mineField]
         if(e.type == 'click' && !newField[i][j].isMarked) uncoverTile(newField,i,j)
         else if(e.type == 'contextmenu') newField[i][j].isMarked = !newField[i][j].isMarked
