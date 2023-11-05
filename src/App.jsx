@@ -1,33 +1,58 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Minefield from './components/Minefield'
-import Face from './components/Face'
+import Tools from './components/Tools'
+import useGameConfig from './hooks/useGameConfig'
+import Header from './components/Header'
+import { GAME_STATE } from './constants/gameState'
 
 function App() {
 
-  const [gameState, setGameState] = useState(0)
+  const [gameState, setGameState] = useState(GAME_STATE.PAUSED)
+  const {gameConfig, changeMines, changeRows, changeCols} = useGameConfig(10, 10, 10)
+  const [remainingMines, setRemainingMines] = useState(gameConfig.numMines)
 
-  const setWin = () => setGameState(1)
-  const setLose = () => setGameState(-1)
-  const restartGame = () => setGameState(0)
+  useEffect(()=>{
+    setRemainingMines(gameConfig.numMines)
+  },[gameConfig.numMines])
 
   return (
     <div
       className='flex flex-col justify-center items-center m-5'
     >
+
       <h1
-        className='font-bold text-5xl font m-5'
+        className='font-bold text-5xl font'
       >
         Minesweeper
       </h1>
-      <Face gameState={gameState} handleClick={restartGame} />
-      <Minefield
-        numMines={10}
-        numRows={10}
-        numCols={10}
-        setWin={setWin}
-        setLose={setLose}
+
+      <Header
         gameState={gameState}
+        setGameState={setGameState}
+        remainingMines={remainingMines}
       />
+
+      <Minefield
+        gameConfig={gameConfig}
+        gameState={gameState}
+        setGameState={setGameState}
+        remainingMines={remainingMines}
+        setRemainingMines={setRemainingMines}
+      />
+
+      {gameState === GAME_STATE.PAUSED &&
+        <div
+        className='fixed top-4 left-4'
+        >
+          <Tools
+            gameConfig={gameConfig}
+            changeMines={changeMines}
+            changeRows={changeRows}
+            changeCols={changeCols}
+            />
+        </div>
+      }
+
     </div>
   )
 }

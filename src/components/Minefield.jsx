@@ -1,74 +1,21 @@
-import { useEffect, useState } from 'react'
 import Tile from './Tile'
 import { DIRECTIONS } from '../constants/directions'
+import useMineField from '../hooks/useMineField'
+import { GAME_STATE } from '../constants/gameState'
 
-const Minefield = ({numMines, numRows, numCols=numRows, setWin, setLose, gameState}) => {
+const Minefield = ({gameConfig, gameState, setGameState, remainingMines, setRemainingMines}) => {
 
-    const [ mineField, setMinefield ] = useState([])
-
-    const createField = (n, x, y=x) => {
-        let field = []
-
-        for(let i=0; i<x; i++){
-            field[i]=[]
-            for(let j=0; j<y; j++){
-                field[i][j]={
-                    hasMine: false,
-                    isCovered: true,
-                    isMarked: false,
-                    value: 0,
-                }
-            }
-        }
-
-        for(let i=0; i<n; i++){
-            const mineX = Math.floor(Math.random()*x)
-            const mineY = Math.floor(Math.random()*y)
-            if(!field[mineX][mineY].hasMine) field[mineX][mineY].hasMine = true
-            else i--
-        }
-
-        for(let i=0; i<x; i++){
-            for(let j=0; j<y; j++){
-                if(!field[i][j].hasMine){
-                    let value = 0
-                    DIRECTIONS.forEach( d => {
-                        const newX = d.x + i
-                        const newY = d.y + j
-                        if(newX>=0 && newY>=0 && newX<numRows && newY<numCols && field[newX][newY].hasMine) value++
-                    })
-                    field[i][j].value = value
-                }
-            }
-        }
-
-        return field
-    }
-
-    useEffect(()=>{
-        if(gameState===0){
-            setMinefield(createField(numMines, numRows, numCols))
-        }
-    },[gameState])
-
-    useEffect( () => {
-        let isWin = true
-        if(mineField.length===0) return
-        for(let i=0; i<numRows; i++){
-            for(let j=0; j<numCols; j++){
-                if(mineField[i][j].isCovered && !mineField[i][j].hasMine){
-                    isWin = false
-                    break
-                }
-            }
-        }
-        if(isWin) setWin()
-    },[mineField])
+    const {mineField, setMinefield} = useMineField({
+        gameState,
+        gameConfig,
+        setGameState,
+    })
+    const {numRows, numCols} = gameConfig
 
     const uncoverTile = (field, i, j) => {
         field[i][j].isCovered = false
         if(field[i][j].hasMine){
-            setLose()
+            setGameState(GAME_STATE.LOSE)
             return
         }
         if(field[i][j].value === 0){
@@ -82,16 +29,26 @@ const Minefield = ({numMines, numRows, numCols=numRows, setWin, setLose, gameSta
 
     const handleClick = (e,i,j) => {
         e.preventDefault()
-        if(gameState!==0) return
+        if(gameState !== GAME_STATE.PAUSED && gameState !== GAME_STATE.PLAY) return
+        if(gameState === GAME_STATE.PAUSED) setGameState(GAME_STATE.PLAY)
         let newField = [...mineField]
         if(e.type == 'click' && !newField[i][j].isMarked) uncoverTile(newField,i,j)
-        else if(e.type == 'contextmenu') newField[i][j].isMarked = !newField[i][j].isMarked
+        else if(e.type == 'contextmenu'){
+            if(newField[i][j].isMarked){
+                newField[i][j].isMarked = false
+                setRemainingMines(m=>m+1)
+            }else if(remainingMines > 0){
+                newField[i][j].isMarked = true
+                setRemainingMines(m=>m-1)
+            }
+        }
         setMinefield(newField)
     }
 
     return (
         <div
-            className={`grid grid-cols-10 gap-3 text-xl`}
+            className={`grid gap-3 text-xl`}
+            style={{ gridTemplateColumns: `repeat(${numCols},1fr)` }}
         >
             {mineField.map( (row,i) => {
                 return row.map( (tile,j) => {
