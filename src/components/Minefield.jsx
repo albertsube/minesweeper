@@ -89,9 +89,11 @@ const Minefield = ({numMines, numRows, numCols=numRows, setWin, setLose, gameSta
         setMinefield(newField)
     }
 
+    const gridCols = `grid-cols-${numCols}`
+
     return (
         <div
-            className={`grid grid-cols-10 gap-3 text-xl`}
+            className={`grid ${gridCols} gap-3 text-xl`}
         >
             {mineField.map( (row,i) => {
                 return row.map( (tile,j) => {
