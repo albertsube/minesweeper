@@ -3,41 +3,16 @@ import Minefield from './components/Minefield'
 import Face from './components/Face'
 import Display from './components/Display'
 import Tools from './components/Tools'
+import useGameConfig from './hooks/useGameConfig'
 
 function App() {
 
   const [gameState, setGameState] = useState(0)
-  const [gameConfig, setGameConfig] = useState({
-    numMines: 10,
-    numRows: 10,
-    numCols: 10,
-  })
+  const {gameConfig, changeMines, changeRows, changeCols} = useGameConfig(10, 10, 10)
 
   const setWin = () => setGameState(1)
   const setLose = () => setGameState(-1)
   const restartGame = () => setGameState(0)
-
-  const changeMines = num => {
-    setGameConfig(currentConfig => {
-      const numTiles = currentConfig.numRows * currentConfig.numCols
-      const newMines = Math.min(Math.max(currentConfig.numMines + num, 0), numTiles)
-      return{ ...currentConfig, numMines: newMines }
-    })
-  }
-
-  const changeRows = num => {
-    setGameConfig(currentConfig => {
-      const newRows = Math.max(currentConfig.numRows + num, 0)
-      return{ ...currentConfig, numRows: newRows }
-    })
-  }
-
-  const changeCols = num => {
-    setGameConfig(currentConfig => {
-      const newCols = Math.max(currentConfig.numCols + num, 0)
-      return{ ...currentConfig, numCols: newCols }
-    })
-  }
 
   return (
     <div
@@ -59,9 +34,6 @@ function App() {
       </div>
 
       <Minefield
-        // numMines={gameConfig.numMines}
-        // numRows={gameConfig.numRows}
-        // numCols={gameConfig.numCols}
         {...gameConfig}
         setWin={setWin}
         setLose={setLose}
