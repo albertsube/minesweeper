@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Minefield from './components/Minefield'
 import Tools from './components/Tools'
 import useGameConfig from './hooks/useGameConfig'
@@ -10,6 +10,10 @@ function App() {
   const [gameState, setGameState] = useState(GAME_STATE.PAUSED)
   const {gameConfig, changeMines, changeRows, changeCols} = useGameConfig(10, 10, 10)
   const [remainingMines, setRemainingMines] = useState(gameConfig.numMines)
+
+  useEffect(()=>{
+    setRemainingMines(gameConfig.numMines)
+  },[gameConfig.numMines])
 
   return (
     <div
