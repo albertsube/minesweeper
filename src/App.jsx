@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import Minefield from './components/Minefield'
-import Face from './components/Face'
-import Display from './components/Display'
 import Tools from './components/Tools'
 import useGameConfig from './hooks/useGameConfig'
+import Header from './components/Header'
 
 function App() {
 
@@ -26,19 +25,19 @@ function App() {
         Minesweeper
       </h1>
 
-      <div
-        className='flex justify-center items-center gap-10 m-5'
-      >
-        <Display value={remainingMines}/>
-        <Face gameState={gameState} handleClick={restartGame} />
-        <Display />
-      </div>
+      <Header
+        gameState={gameState}
+        restartGame={restartGame}
+        remainingMines={remainingMines}
+      />
 
       <Minefield
         gameConfig={gameConfig}
         setWin={setWin}
         setLose={setLose}
         gameState={gameState}
+        remainingMines={remainingMines}
+        setRemainingMines={setRemainingMines}
       />
 
       <div

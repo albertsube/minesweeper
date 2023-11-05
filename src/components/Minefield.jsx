@@ -2,7 +2,7 @@ import Tile from './Tile'
 import { DIRECTIONS } from '../constants/directions'
 import useMineField from '../hooks/useMineField'
 
-const Minefield = ({gameConfig, setWin, setLose, gameState}) => {
+const Minefield = ({gameConfig, setWin, setLose, gameState, remainingMines, setRemainingMines}) => {
 
     const {mineField, setMinefield} = useMineField({
         gameState,
@@ -31,7 +31,15 @@ const Minefield = ({gameConfig, setWin, setLose, gameState}) => {
         if(gameState!==0) return
         let newField = [...mineField]
         if(e.type == 'click' && !newField[i][j].isMarked) uncoverTile(newField,i,j)
-        else if(e.type == 'contextmenu') newField[i][j].isMarked = !newField[i][j].isMarked
+        else if(e.type == 'contextmenu'){
+            if(newField[i][j].isMarked){
+                newField[i][j].isMarked = false
+                setRemainingMines(m=>m+1)
+            }else if(remainingMines > 0){
+                newField[i][j].isMarked = true
+                setRemainingMines(m=>m-1)
+            }
+        }
         setMinefield(newField)
     }
 
