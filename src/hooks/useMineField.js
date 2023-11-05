@@ -52,7 +52,7 @@ export default function useMineField({
     }
 
     useEffect(()=>{
-        if(gameState===0){
+        if(gameState === GAME_STATE.PAUSED){
             setMinefield(createField(numMines, numRows, numCols))
         }
     },[gameState, numMines, numRows, numCols])

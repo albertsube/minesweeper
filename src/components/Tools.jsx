@@ -3,7 +3,10 @@ import LeftArrow from './Leftarrow'
 import RightArrow from './RightArrow'
 import Display from './Display'
 
-export default function Tools({numMines, numRows, numCols, changeMines, changeRows, changeCols}) {
+export default function Tools({gameConfig, changeMines, changeRows, changeCols}) {
+
+    const {numMines, numRows, numCols} = gameConfig
+
     return (
         <div
             className='group bg-gray-100 p-3 rounded-xl'

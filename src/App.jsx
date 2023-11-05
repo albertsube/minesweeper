@@ -36,16 +36,18 @@ function App() {
         setRemainingMines={setRemainingMines}
       />
 
-      <div
+      {gameState === GAME_STATE.PAUSED &&
+        <div
         className='fixed top-4 left-4'
-      >
-        <Tools
-          {...gameConfig}
-          changeMines={changeMines}
-          changeRows={changeRows}
-          changeCols={changeCols}
-        />
-      </div>
+        >
+          <Tools
+            gameConfig={gameConfig}
+            changeMines={changeMines}
+            changeRows={changeRows}
+            changeCols={changeCols}
+            />
+        </div>
+      }
 
     </div>
   )
