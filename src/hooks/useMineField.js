@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react"
 import { DIRECTIONS } from '../constants/directions'
+import { GAME_STATE } from "../constants/gameState"
 
 export default function useMineField({
     gameState,
     gameConfig,
-    setWin,
+    setGameState,
 }) {
 
     const [ mineField, setMinefield ] = useState([])
@@ -67,7 +68,7 @@ export default function useMineField({
                 }
             }
         }
-        if(isWin) setWin()
+        if(isWin) setGameState(GAME_STATE.WIN)
     },[mineField])
 
     return {mineField, setMinefield}

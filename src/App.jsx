@@ -3,16 +3,13 @@ import Minefield from './components/Minefield'
 import Tools from './components/Tools'
 import useGameConfig from './hooks/useGameConfig'
 import Header from './components/Header'
+import { GAME_STATE } from './constants/gameState'
 
 function App() {
 
-  const [gameState, setGameState] = useState(0)
+  const [gameState, setGameState] = useState(GAME_STATE.PAUSED)
   const {gameConfig, changeMines, changeRows, changeCols} = useGameConfig(10, 10, 10)
   const [remainingMines, setRemainingMines] = useState(gameConfig.numMines)
-
-  const setWin = () => setGameState(1)
-  const setLose = () => setGameState(-1)
-  const restartGame = () => setGameState(0)
 
   return (
     <div
@@ -27,15 +24,14 @@ function App() {
 
       <Header
         gameState={gameState}
-        restartGame={restartGame}
+        setGameState={setGameState}
         remainingMines={remainingMines}
       />
 
       <Minefield
         gameConfig={gameConfig}
-        setWin={setWin}
-        setLose={setLose}
         gameState={gameState}
+        setGameState={setGameState}
         remainingMines={remainingMines}
         setRemainingMines={setRemainingMines}
       />
