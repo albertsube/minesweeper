@@ -9,6 +9,7 @@ function App() {
 
   const [gameState, setGameState] = useState(0)
   const {gameConfig, changeMines, changeRows, changeCols} = useGameConfig(10, 10, 10)
+  const [remainingMines, setRemainingMines] = useState(gameConfig.numMines)
 
   const setWin = () => setGameState(1)
   const setLose = () => setGameState(-1)
@@ -28,13 +29,13 @@ function App() {
       <div
         className='flex justify-center items-center gap-10 m-5'
       >
-        <Display />
+        <Display value={remainingMines}/>
         <Face gameState={gameState} handleClick={restartGame} />
         <Display />
       </div>
 
       <Minefield
-        {...gameConfig}
+        gameConfig={gameConfig}
         setWin={setWin}
         setLose={setLose}
         gameState={gameState}
