@@ -49,7 +49,7 @@ const Minefield = ({numMines, numRows, numCols=numRows, setWin, setLose, gameSta
         if(gameState===0){
             setMinefield(createField(numMines, numRows, numCols))
         }
-    },[gameState])
+    },[gameState, numMines, numRows, numCols])
 
     useEffect( () => {
         let isWin = true
@@ -89,11 +89,10 @@ const Minefield = ({numMines, numRows, numCols=numRows, setWin, setLose, gameSta
         setMinefield(newField)
     }
 
-    const gridCols = `grid-cols-${numCols}`
-
     return (
         <div
-            className={`grid ${gridCols} gap-3 text-xl`}
+            className={`grid gap-3 text-xl`}
+            style={{ gridTemplateColumns: `repeat(${numCols},1fr)` }}
         >
             {mineField.map( (row,i) => {
                 return row.map( (tile,j) => {
