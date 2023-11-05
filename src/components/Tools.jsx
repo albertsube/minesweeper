@@ -20,7 +20,7 @@ export default function Tools({numMines, numRows, numCols, changeMines, changeRo
                 className='hidden group-hover:block'
             >
                 <div className='flex gap-2 justify-between items-center p-3'>
-                    <p className='w-20'>Mines</p>
+                    <p className='w-20 font-bold'>Mines</p>
                     <LeftArrow
                         handleClick={()=>changeMines(-1)}
                     />
@@ -30,7 +30,7 @@ export default function Tools({numMines, numRows, numCols, changeMines, changeRo
                     />
                 </div>
                 <div className='flex gap-2 justify-between items-center p-3'>
-                    <p className='w-20'>Rows</p>
+                    <p className='w-20 font-bold'>Rows</p>
                     <LeftArrow
                         handleClick={()=>changeRows(-1)}
                     />
@@ -40,7 +40,7 @@ export default function Tools({numMines, numRows, numCols, changeMines, changeRo
                     />
                 </div>
                 <div className='flex gap-2 justify-between items-center p-3'>
-                    <p className='w-20'>Columns</p>
+                    <p className='w-20 font-bold'>Columns</p>
                     <LeftArrow
                         handleClick={()=>changeCols(-1)}
                     />

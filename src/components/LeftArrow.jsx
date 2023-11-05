@@ -3,6 +3,7 @@ import React from 'react'
 export default function LeftArrow({handleClick}) {
   return (
     <div
+      className='cursor-pointer'
       onClick={handleClick}
     >
       <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">

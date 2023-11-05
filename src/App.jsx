@@ -20,13 +20,13 @@ function App() {
     >
 
       <h1
-        className='font-bold text-5xl font m-5'
+        className='font-bold text-5xl font'
       >
         Minesweeper
       </h1>
 
       <div
-        className='flex justify-between items-center'
+        className='flex justify-center items-center gap-10 m-5'
       >
         <Display />
         <Face gameState={gameState} handleClick={restartGame} />
