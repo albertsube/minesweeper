@@ -37,7 +37,7 @@ export default function Play() {
       />
 
       {gameState === GAME_STATE.PAUSED && (
-        <div className="fixed top-4 left-4">
+        <div className="fixed top-4 left-4 hidden">
           <Tools
             gameConfig={gameConfig}
             changeMines={changeMines}
