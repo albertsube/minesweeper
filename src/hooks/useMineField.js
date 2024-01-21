@@ -1,75 +1,77 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from 'react'
 import { DIRECTIONS } from '../constants/directions'
-import { GAME_STATE } from "../constants/gameState"
+import { GAME_STATE } from '../constants/gameState'
 
-export default function useMineField({
-    gameState,
-    gameConfig,
-    setGameState,
-}) {
+export default function useMineField({ gameState, gameConfig, setGameState }) {
+  const [mineField, setMinefield] = useState([])
 
-    const [ mineField, setMinefield ] = useState([])
-    
-    const {numMines, numRows, numCols} = gameConfig
+  const { numMines, numRows, numCols } = gameConfig
 
-    const createField = (n, x, y=x) => {
-        let field = []
+  const createField = (n, x, y = x) => {
+    let field = []
 
-        for(let i=0; i<x; i++){
-            field[i]=[]
-            for(let j=0; j<y; j++){
-                field[i][j]={
-                    hasMine: false,
-                    isCovered: true,
-                    isMarked: false,
-                    value: 0,
-                }
-            }
+    for (let i = 0; i < x; i++) {
+      field[i] = []
+      for (let j = 0; j < y; j++) {
+        field[i][j] = {
+          hasMine: false,
+          isCovered: true,
+          isMarked: false,
+          value: 0,
         }
-
-        for(let i=0; i<n; i++){
-            const mineX = Math.floor(Math.random()*x)
-            const mineY = Math.floor(Math.random()*y)
-            if(!field[mineX][mineY].hasMine) field[mineX][mineY].hasMine = true
-            else i--
-        }
-
-        for(let i=0; i<x; i++){
-            for(let j=0; j<y; j++){
-                if(!field[i][j].hasMine){
-                    let value = 0
-                    DIRECTIONS.forEach( d => {
-                        const newX = d.x + i
-                        const newY = d.y + j
-                        if(newX>=0 && newY>=0 && newX<numRows && newY<numCols && field[newX][newY].hasMine) value++
-                    })
-                    field[i][j].value = value
-                }
-            }
-        }
-
-        return field
+      }
     }
 
-    useEffect(()=>{
-        if(gameState === GAME_STATE.PAUSED){
-            setMinefield(createField(numMines, numRows, numCols))
-        }
-    },[gameState, numMines, numRows, numCols])
+    for (let i = 0; i < n; i++) {
+      const mineX = Math.floor(Math.random() * x)
+      const mineY = Math.floor(Math.random() * y)
+      if (!field[mineX][mineY].hasMine) field[mineX][mineY].hasMine = true
+      else i--
+    }
 
-    useEffect( () => {
-        let isWin = true
-        if(mineField.length===0) return
-        for(let i=0; i<numRows; i++){
-            for(let j=0; j<numCols; j++){
-                if(mineField[i][j].isCovered && !mineField[i][j].hasMine){
-                    isWin = false
-                    break
-                }
-            }
+    for (let i = 0; i < x; i++) {
+      for (let j = 0; j < y; j++) {
+        if (!field[i][j].hasMine) {
+          let value = 0
+          DIRECTIONS.forEach((d) => {
+            const newX = d.x + i
+            const newY = d.y + j
+            if (
+              newX >= 0 &&
+              newY >= 0 &&
+              newX < numRows &&
+              newY < numCols &&
+              field[newX][newY].hasMine
+            )
+              value++
+          })
+          field[i][j].value = value
         }
-        if(isWin) setGameState(GAME_STATE.WIN)
-    },[mineField])
+      }
+    }
 
-    return {mineField, setMinefield}
+    return field
+  }
+
+  useEffect(() => {
+    if (gameState === GAME_STATE.PAUSED) {
+      setMinefield(createField(numMines, numRows, numCols))
+    }
+  }, [gameState, numMines, numRows, numCols])
+
+  useEffect(() => {
+    let isWin = true
+    if (mineField.length === 0) return
+    for (let i = 0; i < numRows; i++) {
+      for (let j = 0; j < numCols; j++) {
+        if (mineField[i][j].isCovered && !mineField[i][j].hasMine) {
+          isWin = false
+          break
+        }
+      }
+    }
+    if (isWin) setGameState(GAME_STATE.WIN)
+  }, [mineField])
+
+  return { mineField, setMinefield }
 }
